@@ -9,7 +9,7 @@ from minNode import OpenAIClient, extract_text_from_pdf, extract_text_from_docx
 st.set_page_config(page_title="Meeting Minutes Generator", page_icon="📝")
 
 # Load environment variables from .env (anywhere up the tree)
-load_dotenv(find_dotenv(), override=False)
+load_dotenv(find_dotenv())
 
 @st.cache_resource
 def get_openai_client():
@@ -47,8 +47,9 @@ def main():
     # --- 1. API Key Handling & Connection Test ---
     api_key = os.getenv("OPENAI_API_KEY", "").strip()
 
-    if not api_key:
-        st.error("Missing OPENAI_API_KEY. Create a .env file with your key:\n\n`OPENAI_API_KEY=sk-xxxx`")
+    if not os.getenv("OPENAI_API_KEY"):
+        st.error("🔴 Missing OPENAI_API_KEY. Please create a .env file with your key.")
+        st.info("Example .env file:\n\n`OPENAI_API_KEY=\"your_api_key_here\"`")
         st.stop()
 
     client = get_openai_client()
@@ -151,4 +152,5 @@ def main():
             )
 
 if __name__ == "__main__":
+
     main()
